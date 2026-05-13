@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ava's Magic Kingdom – Princess Phonics Adventure</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700;800&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:linear-gradient(135deg,#fce4ec 0%,#f8bbd0 40%,#e1bee7 100%);min-height:100vh}
+@keyframes floatAnim{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes popAnim{0%{transform:scale(1)}40%{transform:scale(1.25)}100%{transform:scale(1)}}
+@keyframes shakeAnim{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes spinAnim{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+@keyframes pulseGlow{0%,100%{box-shadow:0 0 8px #f06292}50%{box-shadow:0 0 20px #e91e8c}}
+@keyframes rainbowText{0%{color:#e91e8c}33%{color:#9c27b0}66%{color:#f06292}100%{color:#e91e8c}}
+@keyframes bounceIn{0%{transform:scale(0.5);opacity:0}70%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
+.app{max-width:660px;margin:0 auto;padding:10px;animation:fadeUp .4s ease}
+.hdr{text-align:center;padding:12px 8px 4px}
+.hdr-title{font-family:'Baloo 2',cursive;font-size:26px;font-weight:800;background:linear-gradient(135deg,#c2185b,#9c27b0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1.2}
+.hdr-sub{font-size:13px;color:#c2185b;font-weight:700;margin-top:1px}
+.crown{font-size:30px;display:inline-block;animation:bounceIn .6s ease}
+.nav-bar{display:flex;align-items:center;justify-content:space-between;background:white;border-radius:18px;padding:8px 14px;margin:8px 0;box-shadow:0 2px 10px rgba(194,24,91,.12)}
+.nav-home{display:flex;align-items:center;gap:6px;background:#fce4ec;border:2px solid #f48fb1;border-radius:12px;padding:6px 12px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;color:#c2185b;transition:all .2s}
+.nav-home:hover{background:#f8bbd0;transform:scale(1.03)}
+.nav-gems{display:flex;align-items:center;gap:5px;background:linear-gradient(135deg,#e1bee7,#ce93d8);border-radius:14px;padding:5px 12px;font-size:13px;font-weight:800;color:#4a148c}
+.nav-streak{display:flex;align-items:center;gap:4px;font-size:13px;font-weight:800;color:#e91e8c}
+.princess-wrap{position:relative;text-align:center;height:70px;margin:4px 0}
+.princess-emoji{font-size:52px;display:inline-block;animation:floatAnim 3s ease-in-out infinite;cursor:pointer;user-select:none;line-height:1}
+.bubble{position:absolute;background:white;border:2.5px solid #f06292;border-radius:16px;padding:6px 11px;font-size:12px;font-weight:800;color:#c2185b;top:4px;left:50%;transform:translateX(calc(-50% - 80px)) translateX(-100%);max-width:180px;min-width:110px;text-align:center;line-height:1.3;animation:fadeUp .35s ease;z-index:5}
+.bubble::after{content:'';position:absolute;right:-10px;top:50%;transform:translateY(-50%);border:8px solid transparent;border-left-color:#f06292}
+.prog-area{background:white;border-radius:18px;padding:10px 14px;margin:6px 0;box-shadow:0 2px 10px rgba(194,24,91,.1)}
+.prog-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.lvl-badge{background:linear-gradient(135deg,#e91e8c,#c2185b);color:white;font-size:11px;font-weight:800;padding:4px 11px;border-radius:20px;text-transform:uppercase;letter-spacing:.4px}
+.prog-bg{background:#fce4ec;border-radius:10px;height:11px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,#f06292,#e91e8c,#c2185b);border-radius:10px;transition:width .7s ease;position:relative}
+.prog-fill::after{content:'✨';position:absolute;right:-2px;top:50%;transform:translateY(-50%);font-size:14px}
+.prog-info{display:flex;justify-content:space-between;margin-top:5px;font-size:11px;font-weight:700;color:#c2185b}
+.lesson-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+.lbtn{background:linear-gradient(135deg,#fce4ec,#f8bbd0);border:2.5px solid #f48fb1;border-radius:16px;padding:13px 7px;text-align:center;cursor:pointer;transition:all .2s;position:relative}
+.lbtn:hover:not(.locked){transform:translateY(-3px);box-shadow:0 5px 14px rgba(194,24,91,.3)}
+.lbtn.locked{opacity:.5;cursor:not-allowed}
+.lbtn.done{border-color:#f9a825;background:linear-gradient(135deg,#fff9c4,#fffde7)}
+.lbtn-icon{font-size:26px;display:block;margin-bottom:3px}
+.lbtn-name{font-size:11px;font-weight:800;color:#c2185b;text-transform:uppercase;letter-spacing:.3px}
+.lbtn-stars{font-size:11px;margin-top:2px}
+.done-badge{position:absolute;top:-5px;right:-5px;background:#ffd700;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:11px;border:2px solid white}
+.lock-icon{position:absolute;top:6px;right:6px;font-size:12px}
+.card{background:white;border-radius:22px;padding:18px;box-shadow:0 3px 18px rgba(194,24,91,.13);animation:fadeUp .35s ease;margin:6px 0}
+.q-label{font-size:12px;font-weight:800;color:#9c27b0;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.word-disp{font-family:'Baloo 2',cursive;font-size:38px;font-weight:800;color:#c2185b;text-align:center;letter-spacing:4px;margin:6px 0}
+.pic-area{text-align:center;font-size:54px;margin:8px 0;animation:floatAnim 2.5s ease-in-out infinite}
+.phoneme-box{background:linear-gradient(135deg,#fce4ec,#e1bee7);border-radius:18px;padding:14px;text-align:center;margin:8px 0}
+.phoneme-ltr{font-family:'Baloo 2',cursive;font-size:74px;font-weight:800;color:#c2185b;line-height:1}
+.phoneme-snd{font-size:15px;font-weight:700;color:#9c27b0;margin-top:3px}
+.opts{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
+.opt{background:linear-gradient(135deg,#fce4ec,#f8bbd0);border:3px solid #f48fb1;border-radius:14px;padding:13px 8px;font-family:'Baloo 2',cursive;font-size:26px;font-weight:800;color:#c2185b;cursor:pointer;transition:all .15s;text-align:center;min-height:60px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:3px;user-select:none}
+.opt:hover:not(:disabled):not(.correct):not(.wrong){transform:scale(1.04);border-color:#e91e8c;box-shadow:0 3px 12px rgba(233,30,140,.25)}
+.opt.correct{background:linear-gradient(135deg,#e8f5e9,#c8e6c9);border-color:#4caf50;color:#2e7d32;animation:popAnim .4s ease}
+.opt.wrong{background:linear-gradient(135deg,#fce4ec,#ffcdd2);border-color:#ef9a9a;color:#c62828;animation:shakeAnim .4s ease}
+.opt:disabled{cursor:default}
+.opt.sm{font-size:17px;padding:11px 8px}
+.droprow{display:flex;justify-content:center;gap:8px;margin:10px 0}
+.dropbox{width:50px;height:58px;border:3px dashed #f48fb1;border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',cursive;font-size:28px;font-weight:800;color:#e91e8c;background:#fff0f5;transition:all .2s}
+.dropbox.filled{border-style:solid;border-color:#c2185b;background:linear-gradient(135deg,#fce4ec,#f8bbd0);animation:popAnim .25s ease}
+.dropbox.wrong-box{border-color:#ef9a9a;background:#ffcdd2;animation:shakeAnim .4s ease}
+.tiles{display:flex;justify-content:center;gap:9px;flex-wrap:wrap;margin-top:10px}
+.tile{width:50px;height:50px;background:linear-gradient(135deg,#c2185b,#e91e8c);color:white;border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',cursive;font-size:24px;font-weight:800;cursor:pointer;transition:all .2s;box-shadow:0 3px 0 #9c0053;user-select:none}
+.tile:hover:not(.used){transform:translateY(-3px);box-shadow:0 5px 0 #9c0053}
+.tile.used{opacity:.25;cursor:default;transform:none;box-shadow:0 2px 0 #9c0053}
+.sound-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:10px}
+.sc{background:linear-gradient(135deg,#fce4ec,#f8bbd0);border:3px solid #f48fb1;border-radius:14px;padding:11px 6px;text-align:center;cursor:pointer;transition:all .2s;user-select:none}
+.sc:hover:not(.correct):not(.wrong):not(.disabled-sc){transform:scale(1.04);border-color:#e91e8c}
+.sc.correct{border-color:#4caf50;background:linear-gradient(135deg,#e8f5e9,#c8e6c9)}
+.sc.wrong{border-color:#ef9a9a;background:linear-gradient(135deg,#fce4ec,#ffcdd2);animation:shakeAnim .4s ease}
+.sc.disabled-sc{cursor:default}
+.sc-pic{font-size:34px;display:block;margin-bottom:3px}
+.sc-word{font-size:13px;font-weight:800;color:#c2185b}
+.btn{width:100%;padding:13px;background:linear-gradient(135deg,#e91e8c,#c2185b);color:white;border:none;border-radius:18px;font-family:'Baloo 2',cursive;font-size:17px;font-weight:800;cursor:pointer;margin-top:12px;box-shadow:0 4px 0 #880e4f;transition:all .15s;letter-spacing:.4px}
+.btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 6px 0 #880e4f}
+.btn:active:not(:disabled){transform:translateY(2px);box-shadow:0 2px 0 #880e4f}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.btn.sec{background:linear-gradient(135deg,#9c27b0,#7b1fa2);box-shadow:0 4px 0 #4a148c}
+.btn.sec:hover:not(:disabled){box-shadow:0 6px 0 #4a148c}
+.btn.outline{background:white;color:#c2185b;border:2.5px solid #f48fb1;box-shadow:none;margin-top:8px}
+.btn.outline:hover{background:#fce4ec;box-shadow:none}
+.btn-row{display:flex;gap:9px;margin-top:10px}
+.btn-row .btn{margin-top:0}
+.hint-btn{background:linear-gradient(135deg,#fff9c4,#fff176);border:2.5px solid #f9a825;border-radius:11px;padding:7px 14px;font-size:12px;font-weight:800;color:#e65100;cursor:pointer;margin-top:8px;transition:all .2s;display:inline-block;font-family:'Nunito',sans-serif}
+.hint-btn:hover{transform:scale(1.03)}
+.hint-box{background:linear-gradient(135deg,#fff9c4,#fffde7);border:2px solid #f9a825;border-radius:11px;padding:9px 13px;font-size:13px;color:#e65100;font-weight:700;margin-top:8px;animation:fadeUp .3s ease}
+.fb{text-align:center;padding:11px;border-radius:14px;font-family:'Baloo 2',cursive;font-size:18px;font-weight:800;margin-top:11px;animation:bounceIn .35s ease}
+.fb.ok{background:linear-gradient(135deg,#e8f5e9,#c8e6c9);color:#2e7d32}
+.fb.no{background:linear-gradient(135deg,#fce4ec,#ffcdd2);color:#c62828}
+.celebrate{text-align:center;padding:18px 10px;animation:fadeUp .5s ease}
+.big-star{font-size:60px;display:inline-block;animation:spinAnim 2.5s linear infinite}
+.cel-title{font-family:'Baloo 2',cursive;font-size:28px;font-weight:800;animation:rainbowText 2s infinite}
+.confrow{font-size:22px;letter-spacing:4px;margin:8px 0;animation:floatAnim 1.5s ease-in-out infinite}
+.stars-big{font-size:34px;margin:10px 0;letter-spacing:6px}
+.result-box{background:linear-gradient(135deg,#fce4ec,#e1bee7);border-radius:18px;padding:13px;margin:12px 0;text-align:center}
+.result-box-label{font-size:13px;font-weight:700;color:#9c27b0;margin-bottom:4px}
+.result-score{font-family:'Baloo 2',cursive;font-size:28px;font-weight:800;color:#c2185b}
+.retry-banner{background:linear-gradient(135deg,#fff3e0,#ffe0b2);border:2.5px solid #ffb74d;border-radius:14px;padding:11px;text-align:center;margin-top:10px;animation:fadeUp .3s ease}
+.retry-banner p{font-size:14px;font-weight:800;color:#e65100;margin-bottom:8px}
+@media(max-width:400px){.lesson-grid{grid-template-columns:repeat(2,1fr)}.opts{gap:7px}.tile{width:44px;height:44px;font-size:20px}.dropbox{width:44px;height:52px;font-size:24px}}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+const LESSONS=[
+  {id:'sounds',name:'Letter Sounds',icon:'🌸',unlocked:true,phases:[
+    {type:'learn',letter:'S',sound:'ssss like a snake',ex:'🐍 Snake',word:'sun'},
+    {type:'learn',letter:'A',sound:'aaa like an apple',ex:'🍎 Apple',word:'ant'},
+    {type:'learn',letter:'T',sound:'ttt like a tap',ex:'🚿 Tap',word:'top'},
+    {type:'pick_sound',q:'Which picture starts with S?',target:'S',items:[
+      {e:'🐍',w:'snake',ok:true},{e:'🐶',w:'dog',ok:false},{e:'🌙',w:'moon',ok:false},{e:'🌟',w:'star',ok:true}
+    ]},
+    {type:'pick_sound',q:'Which picture starts with A?',target:'A',items:[
+      {e:'🍎',w:'apple',ok:true},{e:'🐱',w:'cat',ok:false},{e:'🐜',w:'ant',ok:true},{e:'🌺',w:'rose',ok:false}
+    ]},
+  ]},
+  {id:'words',name:'Magic Words',icon:'🪄',unlocked:true,phases:[
+    {type:'blend',word:'cat',pic:'🐱',hint:"This fluffy animal says meow!"},
+    {type:'blend',word:'dog',pic:'🐶',hint:"This animal is your best friend!"},
+    {type:'blend',word:'sun',pic:'☀️',hint:"It shines bright in the sky!"},
+    {type:'blend',word:'hat',pic:'👑',hint:"A princess wears this on her head!"},
+    {type:'blend',word:'cup',pic:'🍵',hint:"You drink tea from this!"},
+  ]},
+  {id:'rhymes',name:'Rhyme Time',icon:'🎵',unlocked:true,phases:[
+    {type:'rhyme',word:'cat',pic:'🐱',choices:[{e:'👑',w:'hat',ok:true},{e:'🐶',w:'dog',ok:false},{e:'☀️',w:'sun',ok:false},{e:'🏔️',w:'mat',ok:true}],min:2},
+    {type:'rhyme',word:'pink',pic:'💗',choices:[{e:'🥤',w:'drink',ok:true},{e:'💙',w:'blue',ok:false},{e:'😉',w:'wink',ok:true},{e:'🔴',w:'red',ok:false}],min:2},
+    {type:'rhyme',word:'star',pic:'⭐',choices:[{e:'🚗',w:'car',ok:true},{e:'🌙',w:'moon',ok:false},{e:'🏰',w:'far',ok:true},{e:'💗',w:'pink',ok:false}],min:2},
+  ]},
+  {id:'digraphs',name:'Magic Pairs',icon:'🦋',unlocked:false,phases:[
+    {type:'learn',letter:'SH',sound:'shhhh like being quiet',ex:'🤫 Shh!',word:'shop'},
+    {type:'learn',letter:'CH',sound:'ch-ch like a train',ex:'🚂 Choo-choo',word:'chip'},
+    {type:'blend',word:'shop',pic:'🛍️',hint:"A princess loves to go here!"},
+    {type:'blend',word:'chip',pic:'🍟',hint:"A yummy crunchy snack!"},
+    {type:'blend',word:'shed',pic:'🏡',hint:"A little house for garden tools!"},
+  ]},
+  {id:'magic_e',name:'Royal Vowels',icon:'💎',unlocked:false,phases:[
+    {type:'learn',letter:'a_e',sound:'"ay" — the magic e makes it long!',ex:'🎂 cake  🌊 wave',word:'cake'},
+    {type:'blend',word:'cake',pic:'🎂',hint:"Ava might have one on her birthday!"},
+    {type:'blend',word:'rose',pic:'🌹',hint:"A beautiful princess flower!"},
+    {type:'blend',word:'kite',pic:'🪁',hint:"It flies up in the sky!"},
+  ]},
+  {id:'sight',name:'Spell & Win',icon:'🏆',unlocked:false,phases:[
+    {type:'sight',word:'the',sentence:'Ava is ___ princess!',pic:'👸'},
+    {type:'sight',word:'and',sentence:'Pink ___ purple!',pic:'💜'},
+    {type:'sight',word:'she',sentence:'___ wears a crown!',pic:'👑'},
+    {type:'sight',word:'love',sentence:'I ___ sparkles!',pic:'✨'},
+  ]},
+];
+
+const PRAISE=['🌟 Superstar Ava!','✨ Magical!','👑 True princess spelling!','🦄 Incredible!','💖 Brilliant!','🎀 Perfect!','⭐ Shining bright!','🌸 Wonderful!'];
+const RETRY=['Nearly! Give it another go 💕','So close! Try again ✨','You can do it! 💗','Almost there, Ava! 🌸'];
+const MOODS={
+  idle:{e:'👸',s:"Hi Ava! I'm Princess Lily, your spelling friend! 💕"},
+  great:{e:'🤩',s:"WOW! You're a spelling superstar, Ava! ⭐"},
+  good:{e:'😊',s:"Brilliant job, Ava! Keep going! 🌸"},
+  wrong:{e:'🤗',s:"Don't worry! Try again, you've got this! 💕"},
+  celebrate:{e:'🎉',s:"AMAZING! You did it, Princess Ava! 👑"},
+  hint:{e:'🧚',s:"Psst... here's a little clue! ✨"},
+  encourage:{e:'💪',s:"You can do it Ava, I believe in you! 🌟"},
+};
+function rand(a){return a[Math.floor(Math.random()*a.length)]}
+
+let G={
+  screen:'menu',li:null,pi:0,
+  score:0,totalScore:0,streak:0,gems:0,
+  lStars:{},lProg:{},
+  mood:'idle',fb:null,
+  hintShown:false,answered:false,wrongCount:0,
+  letterInput:[],tileChoices:null,
+  rhymeSelected:[],rhymeCorrectPicked:0,
+};
+
+function saveProgress(){
+  try{localStorage.setItem('avaphonics',JSON.stringify({
+    totalScore:G.totalScore,streak:G.streak,gems:G.gems,
+    lStars:G.lStars,lProg:G.lProg,
+    unlocked:LESSONS.map(l=>l.unlocked)
+  }));}catch(e){}
+}
+function loadProgress(){
+  try{
+    const d=JSON.parse(localStorage.getItem('avaphonics')||'{}');
+    if(d.totalScore) G.totalScore=d.totalScore;
+    if(d.streak) G.streak=d.streak;
+    if(d.gems) G.gems=d.gems;
+    if(d.lStars) G.lStars=d.lStars;
+    if(d.lProg) G.lProg=d.lProg;
+    if(d.unlocked) d.unlocked.forEach((u,i)=>{if(LESSONS[i])LESSONS[i].unlocked=u});
+  }catch(e){}
+}
+
+function lesson(){return LESSONS[G.li]}
+function phase(){return lesson().phases[G.pi]}
+
+function render(){
+  const app=document.getElementById('app');
+  app.innerHTML='';
+  const hdr=el('div','hdr',`<span class="crown">👑</span><div class="hdr-title">Ava's Magic Kingdom</div><div class="hdr-sub">Princess Phonics Adventure ✨</div>`);
+  app.appendChild(hdr);
+  if(G.screen==='menu') renderMenu(app);
+  else if(G.screen==='lesson') renderLesson(app);
+  else if(G.screen==='complete') renderComplete(app);
+}
+
+function el(tag,cls,html){
+  const e=document.createElement(tag);
+  if(cls)e.className=cls;
+  if(html)e.innerHTML=html;
+  return e;
+}
+function div(cls,html){return el('div',cls,html)}
+
+function navBar(showHome){
+  const bar=div('nav-bar');
+  if(showHome){
+    const hb=div('nav-home','🏠 Home');
+    hb.onclick=()=>goHome();
+    bar.appendChild(hb);
+  } else {
+    bar.appendChild(div('nav-streak',`🔥 ${G.streak} streak`));
+  }
+  bar.appendChild(div('nav-gems',`💎 ${G.gems} gems`));
+  if(!showHome) bar.appendChild(div('nav-streak',`⭐ ${G.totalScore}`));
+  return bar;
+}
+
+function princessWidget(){
+  const m=MOODS[G.mood]||MOODS.idle;
+  const wrap=div('princess-wrap');
+  wrap.innerHTML=`<div class="bubble">${m.s}</div><span class="princess-emoji" id="ptap">${m.e}</span>`;
+  return wrap;
+}
+
+function renderMenu(app){
+  app.appendChild(navBar(false));
+  app.appendChild(princessWidget());
+  const done=LESSONS.filter(l=>G.lStars[l.id]>0).length;
+  const pct=Math.round((done/LESSONS.length)*100);
+  const prog=div('prog-area',`
+    <div class="prog-top"><span class="lvl-badge">🏰 Ava's Kingdom</span><span style="font-size:12px;font-weight:700;color:#9c27b0">${done}/${LESSONS.length} lessons</span></div>
+    <div class="prog-bg"><div class="prog-fill" style="width:${pct}%"></div></div>
+    <div class="prog-info"><span>🔥 ${G.streak} streak</span><span>⭐ ${G.totalScore} stars total</span></div>`);
+  app.appendChild(prog);
+  const card=div('card','<div class="q-label">✨ Choose your magical lesson, Ava!</div>');
+  const grid=div('lesson-grid');
+  LESSONS.forEach((l,i)=>{
+    const locked=!l.unlocked&&!G.lProg[l.id];
+    const stars=G.lStars[l.id]||0;
+    const isDone=stars>=2;
+    const b=div('lbtn'+(locked?' locked':'')+(isDone?' done':''));
+    b.innerHTML=`${isDone?'<div class="done-badge">⭐</div>':''}${locked?'<span class="lock-icon">🔒</span>':''}<span class="lbtn-icon">${l.icon}</span><div class="lbtn-name">${l.name}</div><div class="lbtn-stars">${[1,2,3].map(s=>s<=stars?'⭐':'☆').join('')}</div>`;
+    if(!locked) b.onclick=()=>startLesson(i);
+    grid.appendChild(b);
+  });
+  card.appendChild(grid);
+  app.appendChild(card);
+  setTimeout(()=>{
+    const pt=document.getElementById('ptap');
+    if(pt) pt.onclick=()=>{G.mood=rand(['great','good','encourage']);render()};
+  },0);
+}
+
+function startLesson(idx){
+  G.li=idx;G.pi=0;G.score=0;
+  G.fb=null;G.hintShown=false;G.answered=false;
+  G.letterInput=[];G.tileChoices=null;
+  G.rhymeSelected=[];G.rhymeCorrectPicked=0;
+  G.wrongCount=0;G.mood='good';G.screen='lesson';
+  render();
+}
+
+function renderLesson(app){
+  const l=lesson();const p=phase();
+  const pct=Math.round((G.pi/l.phases.length)*100);
+  app.appendChild(princessWidget());
+  app.appendChild(div('prog-area',`
+    <div class="prog-top"><span class="lvl-badge">${l.icon} ${l.name}</span><span style="font-size:12px;font-weight:700;color:#9c27b0">Step ${G.pi+1} / ${l.phases.length}</span></div>
+    <div class="prog-bg"><div class="prog-fill" style="width:${pct}%"></div></div>
+    <div class="prog-info"><span>🔥 ${G.streak} streak</span><span>💎 ${G.gems} gems</span></div>`));
+  const nb=div('nav-bar');
+  const hb=div('nav-home','🏠 Home');hb.onclick=()=>goHome();nb.appendChild(hb);
+  nb.appendChild(div('nav-streak',`⭐ ${G.totalScore} stars`));
+  app.appendChild(nb);
+  const card=div('card');
+  if(p.type==='learn') renderLearn(card,p);
+  else if(p.type==='blend') renderBlend(card,p);
+  else if(p.type==='pick_sound') renderPickSound(card,p);
+  else if(p.type==='rhyme') renderRhyme(card,p);
+  else if(p.type==='sight') renderSight(card,p);
+  if(G.fb) card.appendChild(div('fb '+(G.fb.ok?'ok':'no'),G.fb.msg));
+  app.appendChild(card);
+  setTimeout(()=>{
+    const pt=document.getElementById('ptap');
+    if(pt) pt.onclick=()=>{G.mood=rand(['great','good','encourage']);render()};
+  },0);
+}
+
+function renderLearn(card,p){
+  card.innerHTML=`<div class="q-label">🌟 Meet this sound!</div>
+    <div class="phoneme-box"><div class="phoneme-ltr">${p.letter}</div><div class="phoneme-snd">It says: <strong>"${p.sound}"</strong></div></div>
+    <div style="text-align:center;margin:10px 0"><div style="font-size:46px;animation:floatAnim 2s ease-in-out infinite">${p.ex.split(' ')[0]}</div><div style="font-weight:800;color:#c2185b;font-size:15px;margin-top:3px">${p.ex.split(' ').slice(1).join(' ')}</div></div>
+    <div style="text-align:center;font-size:14px;color:#9c27b0;font-weight:700;margin-bottom:8px">Say it out loud: <strong>${p.sound.split(' ')[0].toUpperCase()}</strong>!</div>
+    ${p.word?`<div class="word-disp">${p.word.toUpperCase()}</div>`:''}`;
+  const btn=el('button','btn','I know it! Next ✨');
+  btn.onclick=()=>advance();
+  card.appendChild(btn);
+}
+
+function renderBlend(card,p){
+  const letters=p.word.split('');
+  if(!G.tileChoices){
+    const extras='bcdfghjklmnpqrstvwxyz'.split('').filter(c=>!p.word.includes(c));
+    const pool=[...letters].sort(()=>Math.random()-.5);
+    const extra=extras[Math.floor(Math.random()*extras.length)];
+    G.tileChoices=[...pool,extra].sort(()=>Math.random()-.5).map(c=>({l:c.toUpperCase(),used:false}));
+  }
+  const filled=G.letterInput;
+  card.innerHTML=`<div class="q-label">🪄 Build the magic word!</div>
+    <div class="pic-area">${p.pic}</div>
+    <div style="text-align:center;font-size:13px;font-weight:700;color:#9c27b0;margin-bottom:8px">Tap the letters to spell the word!</div>
+    <div class="droprow">${letters.map((_,i)=>`<div class="dropbox${filled[i]?' filled':''}">${filled[i]||''}</div>`).join('')}</div>
+    <div class="tiles">${G.tileChoices.map((t,i)=>`<div class="tile${t.used?' used':''}" data-ti="${i}">${t.l}</div>`).join('')}</div>`;
+  if(G.fb&&!G.fb.ok) card.querySelectorAll('.dropbox').forEach(b=>b.classList.add('wrong-box'));
+  if(!G.hintShown){
+    const hb=el('button','hint-btn','💡 Hint from Princess Lily');
+    hb.onclick=()=>{G.hintShown=true;G.mood='hint';render()};
+    card.appendChild(hb);
+  } else {
+    card.appendChild(div('hint-box','💡 '+p.hint));
+  }
+  if(G.fb&&!G.fb.ok){
+    const rb=div('retry-banner','<p>'+G.fb.msg+'</p>');
+    const tryBtn=el('button','btn','Try again! 💪');
+    tryBtn.onclick=()=>{G.letterInput=[];G.tileChoices.forEach(t=>t.used=false);G.fb=null;G.answered=false;G.mood='encourage';render()};
+    rb.appendChild(tryBtn);
+    card.appendChild(rb);
+  }
+  if(G.fb&&G.fb.ok){
+    const nb=el('button','btn','Next →');nb.onclick=()=>advance();card.appendChild(nb);
+  }
+  card.querySelectorAll('.tile').forEach(t=>{
+    t.onclick=()=>{
+      const i=parseInt(t.dataset.ti);
+      if(G.tileChoices[i].used||G.answered) return;
+      G.letterInput.push(G.tileChoices[i].l);
+      G.tileChoices[i].used=true;
+      if(G.letterInput.length===letters.length){
+        const input=G.letterInput.join('').toLowerCase();
+        if(input===p.word.toLowerCase()){markCorrect();G.answered=true;G.fb={ok:true,msg:rand(PRAISE)};}
+        else{G.streak=0;G.wrongCount++;G.mood=G.wrongCount>=2?'wrong':'encourage';G.fb={ok:false,msg:rand(RETRY)};}
+      }
+      render();
+    };
+  });
+}
+
+function renderPickSound(card,p){
+  const correctItems=p.items.filter(x=>x.ok);
+  const total=correctItems.length;
+  card.innerHTML=`<div class="q-label">🔍 ${p.q}</div>
+    <div style="text-align:center;margin:8px 0"><div style="font-family:'Baloo 2',cursive;font-size:52px;font-weight:800;color:#c2185b;line-height:1">${p.target}</div><div style="font-size:13px;font-weight:700;color:#9c27b0">Sound: "${p.target.toLowerCase()}..."</div></div>
+    <div style="font-size:12px;font-weight:700;color:#9c27b0;text-align:center;margin-bottom:6px">Tap all pictures that start with <strong>${p.target}</strong>!</div>
+    <div class="opts">${p.items.map((item,i)=>{
+      const picked=G.rhymeSelected.includes(i);
+      let cls='opt sm';if(picked) cls+=item.ok?' correct':' wrong';
+      return `<div class="${cls}" data-pi="${i}" data-ok="${item.ok}" style="font-size:15px;gap:5px"><span style="font-size:28px">${item.e}</span><span>${item.w}</span></div>`;
+    }).join('')}</div>`;
+  if(!G.answered){
+    card.querySelectorAll('.opt').forEach(o=>{
+      o.onclick=()=>{
+        const i=parseInt(o.dataset.pi);const ok=o.dataset.ok==='true';
+        if(G.rhymeSelected.includes(i)) return;
+        G.rhymeSelected.push(i);
+        if(ok){
+          G.rhymeCorrectPicked++;
+          if(G.rhymeCorrectPicked>=total){markCorrect();G.answered=true;G.fb={ok:true,msg:rand(PRAISE)};}
+        } else {
+          G.streak=0;G.wrongCount++;G.mood=G.wrongCount>=2?'wrong':'encourage';
+          G.fb={ok:false,msg:rand(RETRY)};
+          setTimeout(()=>{G.rhymeSelected=G.rhymeSelected.filter(s=>s!==i);G.fb=null;render();},900);
+        }
+        render();
+      };
+    });
+  }
+  if(G.answered){const nb=el('button','btn','Next →');nb.onclick=()=>advance();card.appendChild(nb);}
+}
+
+function renderRhyme(card,p){
+  const total=p.min;
+  card.innerHTML=`<div class="q-label">🎵 Find the words that rhyme with...</div>
+    <div style="text-align:center;margin:10px 0"><div style="font-size:46px">${p.pic}</div><div style="font-family:'Baloo 2',cursive;font-size:38px;font-weight:800;color:#e91e8c;letter-spacing:3px">${p.word}</div></div>
+    <div style="font-size:12px;font-weight:700;color:#9c27b0;text-align:center;margin-bottom:8px">Tap ALL the rhyming words! Find ${total} 🎵</div>
+    <div class="sound-grid">${p.choices.map((c,i)=>{
+      const picked=G.rhymeSelected.includes(i);
+      let cls='sc';if(picked) cls+=c.ok?' correct':' wrong';if(G.answered) cls+=' disabled-sc';
+      return `<div class="${cls}" data-ri="${i}" data-ok="${c.ok}"><span class="sc-pic">${c.e}</span><span class="sc-word">${c.w}</span></div>`;
+    }).join('')}</div>`;
+  if(!G.answered){
+    card.querySelectorAll('.sc').forEach(s=>{
+      s.onclick=()=>{
+        const i=parseInt(s.dataset.ri);const ok=s.dataset.ok==='true';
+        if(G.rhymeSelected.includes(i)) return;
+        G.rhymeSelected.push(i);
+        if(ok){
+          G.rhymeCorrectPicked++;
+          if(G.rhymeCorrectPicked>=total){markCorrect();G.answered=true;G.fb={ok:true,msg:rand(PRAISE)};render();}
+          else{G.fb={ok:true,msg:`Great! Find ${total-G.rhymeCorrectPicked} more! 🎵`};render();}
+        } else {
+          G.streak=0;G.wrongCount++;G.mood=G.wrongCount>=2?'wrong':'encourage';
+          G.fb={ok:false,msg:rand(RETRY)};
+          setTimeout(()=>{G.rhymeSelected=G.rhymeSelected.filter(x=>x!==i);G.fb=null;render();},900);
+          render();
+        }
+      };
+    });
+  }
+  if(G.answered){const nb=el('button','btn','Next →');nb.onclick=()=>advance();card.appendChild(nb);}
+}
+
+function renderSight(card,p){
+  const opts=['the','and','she','love','is','it','was','he'].filter(w=>w!==p.word).slice(0,3).concat([p.word]).sort(()=>Math.random()-.5);
+  card.innerHTML=`<div class="q-label">✍️ Spell the magic word!</div>
+    <div style="text-align:center;margin:10px 0"><div style="font-size:50px">${p.pic}</div><div style="font-size:17px;font-weight:700;color:#9c27b0;margin-top:6px">${p.sentence}</div></div>
+    <div style="font-size:12px;color:#f06292;font-weight:700;text-align:center;margin-bottom:4px">Which word fits?</div>
+    <div class="opts">${opts.map(w=>`<div class="opt sm" data-w="${w}" style="font-size:20px">${w}</div>`).join('')}</div>`;
+  if(!G.answered){
+    card.querySelectorAll('.opt').forEach(o=>{
+      o.onclick=()=>{
+        const w=o.dataset.w;
+        if(w===p.word){o.classList.add('correct');markCorrect();G.answered=true;G.fb={ok:true,msg:rand(PRAISE)};}
+        else{o.classList.add('wrong');G.streak=0;G.wrongCount++;G.mood=G.wrongCount>=2?'wrong':'encourage';G.fb={ok:false,msg:rand(RETRY)};setTimeout(()=>{o.classList.remove('wrong');G.fb=null;render();},900);}
+        render();
+      };
+    });
+  }
+  if(G.answered){const nb=el('button','btn','Next →');nb.onclick=()=>advance();card.appendChild(nb);}
+}
+
+function markCorrect(){
+  G.streak++;G.score++;G.totalScore++;
+  G.gems+=G.wrongCount===0?3:1;
+  G.mood=G.streak>=3?'great':'good';
+  G.wrongCount=0;saveProgress();
+}
+
+function advance(){
+  const l=lesson();G.pi++;
+  G.fb=null;G.hintShown=false;G.answered=false;
+  G.letterInput=[];G.tileChoices=null;
+  G.rhymeSelected=[];G.rhymeCorrectPicked=0;G.wrongCount=0;
+  if(G.pi>=l.phases.length){
+    const s=G.score>=l.phases.length?3:G.score>=Math.ceil(l.phases.length*.6)?2:1;
+    G.lStars[l.id]=Math.max(G.lStars[l.id]||0,s);
+    G.lProg[l.id]=G.score;
+    if(LESSONS[G.li+1]) LESSONS[G.li+1].unlocked=true;
+    G.screen='complete';G.mood='celebrate';saveProgress();
+  }
+  render();
+}
+
+function renderComplete(app){
+  const l=lesson();const stars=G.lStars[l.id]||1;
+  const msgs=["You're getting so good at reading, Ava!","Princess Ava is a spelling champion! 🏆","You make Princess Lily so proud! 💕","Every word you learn is like a new magic spell! ✨"];
+  const confetti=['💗','⭐','🌸','💎','✨','🎀','🦋','🌟'];
+  app.appendChild(navBar(true));
+  const cel=div('card celebrate',`
+    <div class="big-star">⭐</div>
+    <div class="cel-title">Amazing, Ava!</div>
+    <div class="confrow">${[...Array(7)].map(()=>rand(confetti)).join(' ')}</div>
+    <div style="font-size:15px;font-weight:700;color:#9c27b0;margin:8px 0">${rand(msgs)}</div>
+    <div class="stars-big">${[1,2,3].map(s=>s<=stars?'⭐':'☆').join(' ')}</div>
+    <div class="result-box"><div class="result-box-label">${l.icon} ${l.name} — complete!</div><div class="result-score">${G.score} / ${l.phases.length} ✨</div></div>
+    <div style="font-size:13px;font-weight:700;color:#c2185b;margin:6px 0">💎 ${G.gems} gems collected!</div>`);
+  const btnRow=div('btn-row');
+  const homeBtn=el('button','btn outline','🏠 Back to Kingdom');homeBtn.onclick=()=>goHome();btnRow.appendChild(homeBtn);
+  const replayBtn=el('button','btn sec','↩ Play again');replayBtn.onclick=()=>startLesson(G.li);btnRow.appendChild(replayBtn);
+  cel.appendChild(btnRow);
+  if(G.li<LESSONS.length-1&&LESSONS[G.li+1].unlocked){
+    const nb=el('button','btn',`Next: ${LESSONS[G.li+1].icon} ${LESSONS[G.li+1].name} →`);
+    nb.onclick=()=>startLesson(G.li+1);nb.style.marginTop='8px';cel.appendChild(nb);
+  }
+  app.appendChild(cel);
+}
+
+function goHome(){
+  G.screen='menu';G.mood='good';G.fb=null;G.answered=false;
+  G.letterInput=[];G.tileChoices=null;G.rhymeSelected=[];G.rhymeCorrectPicked=0;
+  render();
+}
+
+loadProgress();
+render();
+</script>
+</body>
+</html>
